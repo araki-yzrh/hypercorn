@@ -16,12 +16,15 @@ from ..helpers import SANITY_BODY, sanity_framework
 
 
 @pytest.mark.asyncio
-async def test_http1_request(event_loop: asyncio.AbstractEventLoop) -> None:
+async def test_http1_request() -> None:
+    event_loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
+
     server = TCPServer(
         ASGIWrapper(sanity_framework),
         event_loop,
         Config(),
         WorkerContext(None),
+        {},
         MemoryReader(),  # type: ignore
         MemoryWriter(),  # type: ignore
     )
@@ -73,12 +76,15 @@ async def test_http1_request(event_loop: asyncio.AbstractEventLoop) -> None:
 
 
 @pytest.mark.asyncio
-async def test_http1_websocket(event_loop: asyncio.AbstractEventLoop) -> None:
+async def test_http1_websocket() -> None:
+    event_loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
+
     server = TCPServer(
         ASGIWrapper(sanity_framework),
         event_loop,
         Config(),
         WorkerContext(None),
+        {},
         MemoryReader(),  # type: ignore
         MemoryWriter(),  # type: ignore
     )
@@ -110,12 +116,15 @@ async def test_http1_websocket(event_loop: asyncio.AbstractEventLoop) -> None:
 
 
 @pytest.mark.asyncio
-async def test_http2_request(event_loop: asyncio.AbstractEventLoop) -> None:
+async def test_http2_request() -> None:
+    event_loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
+
     server = TCPServer(
         ASGIWrapper(sanity_framework),
         event_loop,
         Config(),
         WorkerContext(None),
+        {},
         MemoryReader(),  # type: ignore
         MemoryWriter(http2=True),  # type: ignore
     )
@@ -173,12 +182,15 @@ async def test_http2_request(event_loop: asyncio.AbstractEventLoop) -> None:
 
 
 @pytest.mark.asyncio
-async def test_http2_websocket(event_loop: asyncio.AbstractEventLoop) -> None:
+async def test_http2_websocket() -> None:
+    event_loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
+
     server = TCPServer(
         ASGIWrapper(sanity_framework),
         event_loop,
         Config(),
         WorkerContext(None),
+        {},
         MemoryReader(),  # type: ignore
         MemoryWriter(http2=True),  # type: ignore
     )

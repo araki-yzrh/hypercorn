@@ -85,7 +85,6 @@ class WSGIWrapper:
 
     def run_app(self, environ: dict, send: Callable) -> None:
         headers: List[Tuple[bytes, bytes]]
-        headers_sent = False
         response_started = False
         status_code: Optional[int] = None
 
@@ -99,7 +98,7 @@ class WSGIWrapper:
             raw, _ = status.split(" ", 1)
             status_code = int(raw)
             headers = [
-                (name.lower().encode("ascii"), value.encode("ascii"))
+                (name.lower().encode("latin-1"), value.encode("latin-1"))
                 for name, value in response_headers
             ]
             response_started = True
@@ -109,12 +108,9 @@ class WSGIWrapper:
         if not response_started:
             raise RuntimeError("WSGI app did not call start_response")
 
+        send({"type": "http.response.start", "status": status_code, "headers": headers})
         try:
             for output in response_body:
-                if not headers_sent:
-                    send({"type": "http.response.start", "status": status_code, "headers": headers})
-                    headers_sent = True
-
                 send({"type": "http.response.body", "body": output, "more_body": True})
         finally:
             if hasattr(response_body, "close"):
